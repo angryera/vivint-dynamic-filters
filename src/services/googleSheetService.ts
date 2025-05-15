@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: "../../credentials/service_account.json",
+  keyFile: "./credentials/service_account.json",
   scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
 });
 
@@ -82,25 +82,15 @@ export const fetchSheetData = async (sheetName: string) => {
   });
 
   // Construct final JSON structures
-  const TABLEAU_FILTERS = {
-    [reportAlias]: filters,
-  };
+  const TABLEAU_FILTERS = filters;
 
-  const TABLEAU_FILTERS_ORDER = {
-    [reportAlias]: filtersOrder,
-  };
+  const TABLEAU_FILTERS_ORDER = filtersOrder;
 
-  const TABLEAU_PARAMETERS = {
-    [reportAlias]: parameters,
-  };
+  const TABLEAU_PARAMETERS = parameters;
 
-  const TABLEAU_DATE_FILTER = {
-    [reportAlias]: dateFilterKey,
-  };
+  const TABLEAU_DATE_FILTER = dateFilterKey;
 
-  const TABLEAU_DATE_FILTER_SELECTED = {
-    [reportAlias]: dateFilterSelectedKey,
-  };
+  const TABLEAU_DATE_FILTER_SELECTED = dateFilterSelectedKey;
 
   return {
     TABLEAU_FILTERS,
@@ -110,4 +100,20 @@ export const fetchSheetData = async (sheetName: string) => {
     TABLEAU_DATE_FILTER_SELECTED,
     optionalVariables,
   };
+};
+
+export const fetchSheetNames = async (): Promise<string[]> => {
+  const sheets = google.sheets({ version: "v4", auth });
+
+  const spreadsheetId = "1X1BlL5f4Q3ttOVAREJrN_By2lfOKugU-crpvvzndAAk";
+
+  // Fetch metadata for the spreadsheet
+  const res = await sheets.spreadsheets.get({
+    spreadsheetId,
+  });
+
+  // Extract sheet names
+  const sheetNames =
+    res.data.sheets?.map((sheet) => sheet.properties?.title || "") || [];
+  return sheetNames;
 };
