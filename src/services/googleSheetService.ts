@@ -5,10 +5,15 @@ const auth = new google.auth.GoogleAuth({
   scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
 });
 
+// Use environment variable for spreadsheetId
+const spreadsheetId = process.env.SPREADSHEET_ID || "";
+
 export const fetchSheetData = async (sheetName: string) => {
   const sheets = google.sheets({ version: "v4", auth });
 
-  const spreadsheetId = "1X1BlL5f4Q3ttOVAREJrN_By2lfOKugU-crpvvzndAAk";
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID environment variable is not set.");
+  }
 
   // Fetch the entire sheet data
   const res = await sheets.spreadsheets.values.get({
@@ -105,7 +110,9 @@ export const fetchSheetData = async (sheetName: string) => {
 export const fetchSheetNames = async (): Promise<string[]> => {
   const sheets = google.sheets({ version: "v4", auth });
 
-  const spreadsheetId = "1X1BlL5f4Q3ttOVAREJrN_By2lfOKugU-crpvvzndAAk";
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID environment variable is not set.");
+  }
 
   // Fetch metadata for the spreadsheet
   const res = await sheets.spreadsheets.get({
