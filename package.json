@@ -4,9 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --require ts-node/register/transpile-only src/index.ts",
+    "prestart": "npx kill-port 3000",
+    "start": "node --require ts-node/register/transpile-only src/server.ts",
     "predev": "npx kill-port 3000",
-    "dev": "nodemon --ignore output/ index.ts"
+    "dev": "nodemon --ignore output/ server.ts"
   },
   "author": "",
   "license": "ISC",
